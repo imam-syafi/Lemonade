@@ -5,10 +5,12 @@ import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withTagValue
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.edts.lemonade.DrawableMatcher.withDrawable
+import org.hamcrest.CoreMatchers.equalTo
 
 /**
  * The lemonade app is effectively a state machine.
@@ -25,9 +27,9 @@ open class BaseTest {
      */
     fun testState(textActionResource: Int, drawableResource: Int) {
         onView(withId(R.id.text_action))
-            .check(matches(ViewMatchers.withText(textActionResource)))
+            .check(matches(withText(textActionResource)))
         onView(withId(R.id.image_lemon_state)).check(
-            matches(withDrawable(drawableResource))
+            matches(withTagValue(equalTo(drawableResource)))
         )
     }
 
@@ -35,7 +37,7 @@ open class BaseTest {
      * Clicks the lemon tree image.
      */
     fun pickLemon() {
-        onView(withDrawable(R.drawable.lemon_tree))
+        onView(withTagValue(equalTo(R.drawable.lemon_tree)))
             .perform(click())
     }
 
@@ -45,7 +47,7 @@ open class BaseTest {
      * aware of, so we loop and click until the image changes.
      */
     fun juiceLemon() {
-        while (onView(withDrawable(R.drawable.lemon_squeeze)).isPresent()) {
+        while (onView(withTagValue(equalTo(R.drawable.lemon_squeeze))).isPresent()) {
             onView(withId(R.id.image_lemon_state)).perform(click())
         }
     }
@@ -54,7 +56,7 @@ open class BaseTest {
      * Click the lemonade image.
      */
     fun drinkJuice() {
-        onView(withDrawable(R.drawable.lemon_drink))
+        onView(withTagValue(equalTo(R.drawable.lemon_drink)))
             .perform(click())
     }
 
